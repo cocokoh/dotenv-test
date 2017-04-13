@@ -3,6 +3,7 @@ var ejsLayouts = require('express-ejs-layouts')
 var bodyParser = require('body-parser')
 var mongoose = require('mongoose')
 var app = express()
+require('dotenv').config({ silent: true })
 
 if (process.env.NODE_ENV === 'test') {
   mongoose.connect('mongodb://localhost/express-authentication-test')
@@ -19,14 +20,14 @@ app.use(ejsLayouts)
 // setup the session
 var session = require('express-session')
 app.use(session({
-  secret: 'supercalafragilistic',
+  secret: process.env.session_secret,
   resave: false,
   saveUninitialized: true
 }))
 
 // all my routes
 app.get('/', function (req, res) {
-  res.render('index')
+  res.send(process.env)
 })
 
 app.get('/profile', function (req, res) {
