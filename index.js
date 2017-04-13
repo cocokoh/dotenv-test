@@ -18,16 +18,26 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(ejsLayouts)
 
 // setup the session
+// store the session into mongodb
 var session = require('express-session')
+var MongoStore = require('connect-mongo')(session)
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  store: new MongoStore({ url: process.env.MONGODB_URI })
 }))
 
 // setup the flash data
 var flash = require('connect-flash')
 app.use(flash())
+
+// initialize our passport
+var passport = require('./config/passport')
+
+// initialize the passport configuration and session as middleware
+app.use(passport.initialize())
+app.use(passport.session())
 
 // all my routes
 app.get('/', function (req, res) {
@@ -36,7 +46,8 @@ app.get('/', function (req, res) {
 
 app.get('/profile', function (req, res) {
   res.render('profile', {
-    flash: req.flash('flash')
+    user: req.user,
+    flash: req.flash('error')
   })
 })
 
@@ -47,7 +58,7 @@ var server
 if (process.env.NODE_ENV === 'test') {
   server = app.listen(process.env.PORT || 4000)
 } else {
-  server = app.listen(process.env.PORT || 3000)
+  server = app.listen(process.env.PORT || 3300)
 }
 
 module.exports = server

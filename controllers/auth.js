@@ -1,6 +1,8 @@
 var express = require('express')
 var router = express.Router()
 
+var passport = require('../config/passport')
+
 var User = require('../models/user')
 
 router.route('/register')
@@ -9,26 +11,17 @@ router.route('/register')
     flash: req.flash('error')
   })
 })
-.post(function (req, res) {
-  // create using User method
-  var newUser = new User({
-    email: req.body.email,
-    name: req.body.name,
-    password: req.body.password
-  })
-
-  newUser.save(function (err, data) {
-    if (err) {
-      return res.send(err)
-      // req.flash('error', 'Registration failed')
-      // return res.redirect('/register')
-    }
-    res.redirect('/')
-  })
-})
+.post(passport.authenticate('local-signup', {
+  successRedirect: '/profile',
+  failureRedirect: '/register'
+}))
 
 router.route('/login')
 .get(function (req, res) {
+  if (req.isAuthenticated()) {
+    req.flash('error', 'You have logged in')
+    return res.redirect('/profile')
+  }
   res.render('auth/login')
 })
 .post(function (req, res) {
