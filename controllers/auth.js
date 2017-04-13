@@ -5,6 +5,16 @@ var passport = require('../config/passport')
 
 var User = require('../models/user')
 
+router.route('/fblogin')
+.get(passport.authenticate('facebook', { scope: 'email' }))
+
+router.get('/fblogin/callback',
+  passport.authenticate('facebook', {
+    successRedirect: '/profile',
+    failureRedirect: '/'
+  })
+)
+
 router.route('/register')
 .get(function (req, res) {
   res.render('auth/signup', {

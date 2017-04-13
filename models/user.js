@@ -6,24 +6,35 @@ var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/
 
 // draw the schema
 var userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    match: emailRegex
+  fb: {
+
   },
-  name: {
-    type: String,
-    required: true,
-    minlength: [3, 'Name must be between 3 and 99 characters'],
-    maxlength: [99, 'Name must be between 3 and 99 characters']
+  local: {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      match: emailRegex
+    },
+    name: {
+      type: String,
+      required: true,
+      minlength: [3, 'Name must be between 3 and 99 characters'],
+      maxlength: [99, 'Name must be between 3 and 99 characters']
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: [8, 'Password must be between 8 and 99 characters'],
+      maxlength: [99, 'Password must be between 8 and 99 characters']
+    }
   },
-  password: {
-    type: String,
-    required: true,
-    minlength: [8, 'Password must be between 8 and 99 characters'],
-    maxlength: [99, 'Password must be between 8 and 99 characters']
+  github: {
+
+  },
+  linkedin: {
+
   }
 })
 

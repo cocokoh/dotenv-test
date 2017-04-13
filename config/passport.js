@@ -23,11 +23,17 @@ passport.deserializeUser(function (id, done) {
 passport.use('facebook', new FacebookStrategy({
   clientID: process.env.FB_APP_KEY,
   clientSecret: process.env.FB_APP_SECRET,
-  callbackURL: 'http://localhost:3300/auth/facebook/callback',
+  callbackURL: 'http://localhost:3300/fblogin/callback',
   enableProof: true,
   profileFields: ['name', 'emails']
 }, function (accessToken, refreshToken, profile, next) {
-  console.log('authenticating using facebook strategy')
+  console.log({
+    accessToken, refreshToken, profile
+  })
+
+  User.findOne({
+    email: profile.email
+  })
 }))
 
 // passport local-signup strategy
