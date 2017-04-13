@@ -5,7 +5,9 @@ var User = require('../models/user')
 
 router.route('/register')
 .get(function (req, res) {
-  res.render('auth/signup')
+  res.render('auth/signup', {
+    flash: req.flash('error')
+  })
 })
 .post(function (req, res) {
   // create using User method
@@ -16,7 +18,11 @@ router.route('/register')
   })
 
   newUser.save(function (err, data) {
-    if (err) return res.redirect('/register')
+    if (err) {
+      return res.send(err)
+      // req.flash('error', 'Registration failed')
+      // return res.redirect('/register')
+    }
     res.redirect('/')
   })
 })

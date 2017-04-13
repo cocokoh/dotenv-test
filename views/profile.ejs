@@ -1,3 +1,7 @@
 <h2>Profile Page</h2>
-
+<% if( flash.length > 0 ) {%>
+<div class="alert alert-success" role="alert">
+  <%- flash %>
+</div>
+<% } %>
 <a href="/">Home</a>

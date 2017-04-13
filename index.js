@@ -8,7 +8,7 @@ require('dotenv').config({ silent: true })
 if (process.env.NODE_ENV === 'test') {
   mongoose.connect('mongodb://localhost/express-authentication-test')
 } else {
-  mongoose.connect('mongodb://localhost/express-authentication')
+  mongoose.connect(process.env.MONGODB_URI)
 }
 
 app.set('view engine', 'ejs')
@@ -20,18 +20,24 @@ app.use(ejsLayouts)
 // setup the session
 var session = require('express-session')
 app.use(session({
-  secret: process.env.session_secret,
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 }))
 
+// setup the flash data
+var flash = require('connect-flash')
+app.use(flash())
+
 // all my routes
 app.get('/', function (req, res) {
-  res.send(process.env)
+  res.render('index')
 })
 
 app.get('/profile', function (req, res) {
-  res.render('profile')
+  res.render('profile', {
+    flash: req.flash('flash')
+  })
 })
 
 var authController = require('./controllers/auth')
